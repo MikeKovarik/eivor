@@ -335,10 +335,10 @@ export class ImageDescriptor {
 
 
 	// Yeah, negative zero is a thing and I'm using it to make debugging easier (console.log would actually log -0 instead of 0)
-	get visibleEdgeTop()    {return -Math.min(-0, this.contentOffsetTopRatio)}
-	get visibleEdgeRight()  {return Math.min(1 + this.contentOffsetRightRatio, 1)}
-	get visibleEdgeBottom() {return Math.min(1 + this.contentOffsetBottomRatio, 1)}
-	get visibleEdgeLeft()   {return -Math.min(-0, this.contentOffsetLeftRatio)}
+	//get visibleEdgeTop()    {return -Math.min(-0, this.contentOffsetTopRatio)}
+	//get visibleEdgeRight()  {return Math.min(1 + this.contentOffsetRightRatio, 1)}
+	//get visibleEdgeBottom() {return Math.min(1 + this.contentOffsetBottomRatio, 1)}
+	//get visibleEdgeLeft()   {return -Math.min(-0, this.contentOffsetLeftRatio)}
 
 	get outsetTop()    {return Math.max(0, -this.offsetTop)}
 	get outsetRight()  {return Math.max(0, -this.offsetRight)}
@@ -350,11 +350,15 @@ export class ImageDescriptor {
 	get insetBottom() {return Math.max(0, this.offsetBottom)}
 	get insetLeft()   {return Math.max(0, this.offsetLeft)}
 
-	get insetTopRatio()    {return this.insetTop / this.containerWidth}
-	get insetRightRatio()  {return this.insetRight / this.containerWidth}
-	get insetBottomRatio() {return this.insetBottom / this.containerWidth}
-	get insetLeftRatio()   {return this.insetLeft / this.containerWidth}
+	//get insetTopRatio()    {return this.insetTop / this.containerWidth}
+	//get insetRightRatio()  {return this.insetRight / this.containerWidth}
+	//get insetBottomRatio() {return this.insetBottom / this.containerWidth}
+	//get insetLeftRatio()   {return this.insetLeft / this.containerWidth}
 
+	get cropLeft()   {return Math.max(this.insetLeft,   this.clipLeft)}
+	get cropRight()  {return Math.max(this.insetRight,  this.clipRight)}
+	get cropTop()    {return Math.max(this.insetTop,    this.clipTop)}
+	get cropBottom() {return Math.max(this.insetBottom, this.clipBottom)}
 }
 
 function percentToRatio(percentString) {
