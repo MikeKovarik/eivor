@@ -1,0 +1,29 @@
+{
+  "name": "img-transition",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Mike Kovarik",
+  "license": "MIT",
+  "keywords": [
+    "image",
+    "transition",
+    "animation",
+    "morph",
+    "crossfade",
+    "blend",
+    "transform",
+    "translate",
+    "background",
+    "img"
+  ],
+  "homepage": "https://img-transition.netlify.com",
+  "bugs": "https://github.com/MikeKovarik/img-transition/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MikeKovarik/img-transition.git"
+  },
+  "scripts": {
+  },
+  "devDependencies": {
+  }
+}
