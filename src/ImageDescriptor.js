@@ -18,16 +18,6 @@ export class ImageDescriptor {
 		this.offsetBottom = 0
 		this.offsetLeft   = 0
 
-		this.clipTopRatio    = 0 // TODO: delete
-		this.clipRightRatio  = 0 // TODO: delete
-		this.clipBottomRatio = 0 // TODO: delete
-		this.clipLeftRatio   = 0 // TODO: delete
-
-		this.offsetTopRatio    = 0 // TODO: delete
-		this.offsetRightRatio  = 0 // TODO: delete
-		this.offsetBottomRatio = 0 // TODO: delete
-		this.offsetLeftRatio   = 0 // TODO: delete
-
 		this.bbox = this.node.getBoundingClientRect()
 		// Deliberately not using bbox, because it does not reflect scroll position.
 		this.left = this.node.offsetLeft
