@@ -1,4 +1,5 @@
-import {ImageDescriptor, promiseLoad, isLoaded} from './ImageDescriptor.js'
+import './polyfill.js'
+import {ImageDescriptor, promiseUrlLoad, parseBgUrl, promiseLoad, isLoaded} from './ImageDescriptor.js'
 
 
 // TODO: cleanup
@@ -9,6 +10,8 @@ var defaultOptions = {
 	fill: 'both',
 	easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
 }
+
+var timeout = millis => new Promise(resolve => setTimeout(resolve, millis))
 
 export class ImageTransition {
 
@@ -37,16 +40,6 @@ export class ImageTransition {
 		// Wait till both images are loaded and their descriptors ready.
 		await Promise.all([sd.ready, td.ready])
 
-		this.containerTranslateX = sd.x - td.x
-		this.containerTranslateY = sd.y - td.y
-
-		this.keyframes = {
-			transform: [
-				`translate(${this.containerTranslateX}px, ${this.containerTranslateY}px)`,
-				`translate(0px, 0px)`,
-			]
-		}
-
 		this.sameUrls = sd.url === td.url
 		this.sameAspects = sd.naturalAspectRatio.toFixed(3) === td.naturalAspectRatio.toFixed(3)
 		this.imagesMatch = this.sameUrls || this.sameAspects
@@ -56,18 +49,19 @@ export class ImageTransition {
 			this.sdVirtualWidth  = sd.contentWidth
 			this.sdVirtualHeight = sd.contentHeight
 		} else if (sd.naturalAspectRatio >= 1 && td.naturalAspectRatio >= 1) {
-			// 1) Both images are landscape, or 2) one is landscape and the other is at leas square
+			// 1) Both images are landscape, or 2) one is landscape and the other is at least square
 			// Use their height as scale basis.
 			this.scale = sd.contentHeight / td.contentHeight
 			this.sdVirtualWidth  = sd.contentWidth * td.naturalAspectRatio
 			this.sdVirtualHeight = sd.contentHeight
 		} else if (sd.naturalAspectRatio <= 1 && td.naturalAspectRatio <= 1) {
-			// 1) Both images are portrait, or 2) one is portrait and the other is at leas square
+			// 1) Both images are portrait, or 2) one is portrait and the other is at least square
 			// Use their width as scale basis.
 			this.scale = sd.contentWidth / td.contentWidth
 			this.sdVirtualWidth  = sd.contentWidth
 			this.sdVirtualHeight = sd.contentHeight / td.naturalAspectRatio
 		}
+
 		this.scaleX = sd.contentWidth / td.contentWidth
 		this.scaleY = sd.contentHeight / td.contentHeight
 
@@ -108,19 +102,6 @@ export class ImageTransition {
 										&& this.sdOutsetTopRatio    <= this.tdOutsetTopRatio
 										&& this.sdOutsetRightRatio  <= this.tdOutsetRightRatio
 										&& this.sdOutsetBottomRatio <= this.tdOutsetBottomRatio
-/*
-		this.sdInsetLeftRatio   = Math.max(0, this.sdOffsetLeftRatio)
-		this.sdInsetRightRatio  = Math.max(0, this.sdOffsetRightRatio)
-		this.sdInsetTopRatio    = Math.max(0, this.sdOffsetTopRatio)
-		this.sdInsetBottomRatio = Math.max(0, this.sdOffsetBottomRatio)
-
-		this.sdClipLeftRatio   = sd.clipLeft / this.sdVirtualWidth
-		this.sdClipRightRatio  = sd.clipRight / this.sdVirtualWidth
-		this.sdClipTopRatio    = sd.clipTop / this.sdVirtualHeight
-		this.sdClipBottomRatio = sd.clipBottom / this.sdVirtualHeight
-*/
-		this.originX = 0
-		this.originY = 0
 
 		if (!this.mode) {
 			/*
@@ -132,48 +113,102 @@ export class ImageTransition {
 			Thus the new this.targetContainedWithinSource should be included into it and also createClone() cannot only rely
 			on this.target.
 			*/
-			if (this.targetContainedWithinSource) {
-				console.warn('TODO: ImageTransition: source scaling down to target not implemented yet (aka reverse mode)')
-				//this.nodeToAnimate = this.source
-				this.mode = 'crop'
-			}
+			
 			if (this.sourceContainedWithinTarget) {
 				this.mode = 'crop'
+				this.reversed = false
+				this.nodeToAnimate = this.target
+			} else if (this.targetContainedWithinSource) {
+				this.mode = 'crop'
+				this.reversed = true
+				this.nodeToAnimate = this.source
 			} else {
-				var suitableForManipulation = this.target.children.length === 0
-											&& td.computed.maxWidth  !== 'none'
-											&& td.computed.maxHeight !== 'none'
-											&& (td.computed.left === 'auto' || td.computed.right === 'auto')
-											&& (td.computed.top === 'auto' || td.computed.bottom === 'auto')
-				this.mode = suitableForManipulation ? 'recreate' : 'clone'
+				// TODO: first version of the project always animated target from source's position and size.
+				// Although opposite (animating source into target's position and size) has already been enabled
+				// in recrop mode with targetContainedWithinSource above... here we're still only considering
+				// animating target. TODO: Try to implement sourceCanBeManipulated.
+				if (this.targetCanBeManipulated) {
+					this.mode = 'recreate'
+					this.nodeToAnimate = this.target
+				//} else if (this.sourceCanBeManipulated) { // TODO: implement
+				} else {
+					this.mode = 'clone'
+				}
 			}
 		}
+
+		this.keyframes = {
+			transformOrigin: pair('0px 0px')
+		}
+
+		this.containerTranslateX = sd.x - td.x
+		this.containerTranslateY = sd.y - td.y
+
+		if (this.reversed) {
+			this.keyframes.transform = [
+				`translate(0px, 0px)`,
+				`translate(${-this.containerTranslateX}px, ${-this.containerTranslateY}px)`,
+			]
+		} else {
+			this.keyframes.transform = [
+				`translate(${this.containerTranslateX}px, ${this.containerTranslateY}px)`,
+				`translate(0px, 0px)`,
+			]
+		}
+
+		//this.targetFromSource = !this.reversed // aka default
+		//this.sourceToTarget = this.reversed // aka reversed
 
 		switch (this.mode) {
 			case 'crop':
 				console.log('RECROP')
 				this.setupCrop()
-				this.nodeToAnimate = this.target
 				break
 			case 'recreate':
-				console.log('RECREATE with placeholder')
+				console.log('RECREATE placeholder & out of flow')
 				this.createPlaceholder()
-				this.setupRecreate()
+				this.setupOutOfFlow()
 				break
 			case 'clone':
 				console.log('RECREATE WITH CLONE')
-				this.createClone()
+				await this.createClone()
 				this.nodeToAnimate = this.clone
-				this.setupRecreate()
+				this.setupOutOfFlow()
 				break
 		}
 
-		this.keyframes.transformOrigin = pair(`${this.originX || 0}px ${this.originY || 0}px`)
+	}
 
+	get targetCanBeManipulated() {
+		let {td} = this
+		return this.target.children.length === 0
+			&& td.computed.maxWidth  !== 'none'
+			&& td.computed.maxHeight !== 'none'
+			&& (td.computed.left === 'auto' || td.computed.right === 'auto')
+			&& (td.computed.top === 'auto' || td.computed.bottom === 'auto')
 	}
 
 	setupCrop() {
-		var {sd, td} = this
+		if (this.reversed) {
+			var sd = this.td
+			var td = this.sd
+		} else {
+			var {sd, td} = this
+		}
+
+		var translateX = this.sdOriginX - (this.tdOriginX * this.scale)
+		var translateY = this.sdOriginY - (this.tdOriginY * this.scale)
+		if (!this.reversed) {
+			this.keyframes.transform[0] += `translate(${translateX}px, ${translateY}px)`
+			this.keyframes.transform[0] += `scale(${this.scale})`
+			this.keyframes.transform[1] += `translate(0px, 0px)`
+			this.keyframes.transform[1] += `scale(1)`
+		} else {
+			this.keyframes.transform[0] += `scale(1)`
+			this.keyframes.transform[0] += `translate(0px, 0px)`
+			this.keyframes.transform[1] += `scale(${1 / this.scale})`
+			this.keyframes.transform[1] += `translate(${-translateX}px, ${-translateY}px)`
+		}
 
 		// clip-path applies to container, not the whole image (contentWidth can be larger than container).
 		// background-position can also offset the image within the container.
@@ -181,9 +216,9 @@ export class ImageTransition {
 		// E.g. given we have bg-position:10px, the image is starts at 10th pixel from left edge of the container.
 		//      If we apply clip-path:inset(10px), nothing happens, both bg-post and clip start at containers edge.
 		//      Only if we changed it to clip-path:inset(11px), then the bg would begin clipped.
-		var sdCropLeft   = Math.max(sd.insetLeft,  sd.clipLeft)
-		var sdCropRight  = Math.max(sd.insetRight, sd.clipRight)
-		var sdCropTop    = Math.max(sd.insetTop,  sd.clipTop)
+		var sdCropLeft   = Math.max(sd.insetLeft,   sd.clipLeft)
+		var sdCropRight  = Math.max(sd.insetRight,  sd.clipRight)
+		var sdCropTop    = Math.max(sd.insetTop,    sd.clipTop)
 		var sdCropBottom = Math.max(sd.insetBottom, sd.clipBottom)
 		// Getting percentage of the total content width that is not displayed (either clipped or shifted).
 		// Not using container width, becasue content image can be stretched. Plus it'll be easier to apply
@@ -196,35 +231,31 @@ export class ImageTransition {
 		// the container. I.e. how much of it is cropped by background-position (usually in combination with background-size:cover).
 		// Recrop is only used if the whole source image is contained within target. I.e if we can fit source into target.
 		// But we need to be aware of how much of source is cropped by bg-position. aka outset.
-		var outsetLeftRatioDiff   = this.sdOutsetLeftRatio   - this.tdOutsetLeftRatio
-		var outsetRightRatioDiff  = this.sdOutsetRightRatio  - this.tdOutsetRightRatio
-		var outsetTopRatioDiff    = this.sdOutsetTopRatio    - this.tdOutsetTopRatio
-		var outsetBottomRatioDiff = this.sdOutsetBottomRatio - this.tdOutsetBottomRatio
+		if (!this.reversed) {
+			var outsetLeftRatioDiff   = this.sdOutsetLeftRatio   - this.tdOutsetLeftRatio
+			var outsetRightRatioDiff  = this.sdOutsetRightRatio  - this.tdOutsetRightRatio
+			var outsetTopRatioDiff    = this.sdOutsetTopRatio    - this.tdOutsetTopRatio
+			var outsetBottomRatioDiff = this.sdOutsetBottomRatio - this.tdOutsetBottomRatio
+		} else {
+			var outsetLeftRatioDiff   = this.tdOutsetLeftRatio   - this.sdOutsetLeftRatio
+			var outsetRightRatioDiff  = this.tdOutsetRightRatio  - this.sdOutsetRightRatio
+			var outsetTopRatioDiff    = this.tdOutsetTopRatio    - this.sdOutsetTopRatio
+			var outsetBottomRatioDiff = this.tdOutsetBottomRatio - this.sdOutsetBottomRatio
+		}
 		// Všechny ingredience smícháme, přivedeme k varu a za neustálého míchání vylejeme do hajzlu.
 		var clipLeft   = ((outsetLeftRatioDiff   + sdCropLeftRatio)   * td.contentWidth)  + td.insetLeft
 		var clipRight  = ((outsetRightRatioDiff  + sdCropRightRatio)  * td.contentWidth)  + td.insetRight
 		var clipTop    = ((outsetTopRatioDiff    + sdCropTopRatio)    * td.contentHeight) + td.insetTop
 		var clipBottom = ((outsetBottomRatioDiff + sdCropBottomRatio) * td.contentHeight) + td.insetBottom
 
-		var translateX = this.sdOriginX - (this.tdOriginX * this.scale)
-		var translateY = this.sdOriginY - (this.tdOriginY * this.scale)
-
-		this.keyframes.transform[0] += `
-			translate(${translateX}px, ${translateY}px)
-			scale(${this.scale})
-		`
-
-		this.keyframes.transform[1] += `
-			translate(0px, 0px)
-			scale(1)
-		`
-
 		this.keyframes.clipPath = [
 			`inset(${clipTop}px ${clipRight}px ${clipBottom}px ${clipLeft}px)`,
-			`inset(${td.clipTop}px   ${td.clipRight}px   ${td.clipBottom}px   ${td.clipLeft}px)`,
+			`inset(${td.clipTop}px ${td.clipRight}px ${td.clipBottom}px ${td.clipLeft}px)`,
 		]
+		if (this.reversed) {
+			this.keyframes.clipPath.reverse()
+		}
 	}
-
 
 	createPlaceholder() {
 		var {sd, td} = this
@@ -239,22 +270,34 @@ export class ImageTransition {
 		this.target.after(this.placeholder)
 	}
 
-	createClone(adjacentNode = this.target) {
+	// TODO: Option to insert clone globally into body instead of source's/target's container
+	async createClone(adjacentNode = this.target) {
 		var {sd, td} = this
-		this.target.style.visibility = 'hidden'
 		this.clone = document.createElement('div')
-		this.clone.style.width  = td.containerWidth + 'px'
-		this.clone.style.height = td.containerHeight + 'px'
-		this.clone.style.backgroundImage = td.computed.backgroundImage
-		this.clone.style.backgroundPosition = td.computed.backgroundPosition
-		this.clone.style.backgroundSize = td.computed.backgroundSize
-		this.clone.style.backgroundRepeat = td.computed.backgroundRepeat
-		this.clone.style.backgroundColor = td.computed.backgroundColor
-		this.clone.style.zIndex = td.computed.zIndex
+		Object.assign(this.clone.style, {
+			willChange: 'all',
+			width: td.containerWidth + 'px',
+			height: td.containerHeight + 'px',
+			backgroundImage: td.computed.backgroundImage,
+			backgroundPosition: td.computed.backgroundPosition,
+			backgroundSize: td.computed.backgroundSize,
+			backgroundRepeat: td.computed.backgroundRepeat,
+			backgroundColor: td.computed.backgroundColor,
+			zIndex: td.computed.zIndex,
+		})
+		this.clone.style.visibility = 'hidden'
 		adjacentNode.after(this.clone)
+		// give the clone some time to load and render the image to prevent unstyled flash
+		await timeout(20)
+		this.clone.style.visibility = ''
+		this.target.style.visibility = 'hidden'
 	}
 
-	setupRecreate() {
+
+	// TODO: first version of the project always animated target from source's position and size.
+	// Although opposite (animating source into target's position and size) has already been enabled
+	// in recrop mode with targetContainedWithinSource above... here we're still only considering
+	setupOutOfFlow() {
 		var {sd, td} = this
 		// RECREATE strategy literally means the target image gets taken out of the flow
 		// or recreated by a temporary new element which is then animated.
@@ -298,16 +341,19 @@ export class ImageTransition {
 
 	async play() {
 		await this.ready
+		this.keyframes.zIndex = [1,1]
 		this.animation = this.nodeToAnimate.animate(this.keyframes, this.options)
-		this.source.style.visibility = 'hidden'
+		this.otherNode = this.nodeToAnimate !== this.source ? this.source : this.target
+		this.otherNode.style.visibility = 'hidden'
+		//this.source.style.visibility = 'hidden'
 		try {
 			await this.animation.finished
 		} catch(err) {}
-		this.animation.cancel()
 		if (this.placeholder) this.placeholder.remove()
 		if (this.clone) this.clone.remove()
 		this.source.style.visibility = ''
 		this.target.style.visibility = ''
+		this.animation.cancel()
 	}
 
 }
