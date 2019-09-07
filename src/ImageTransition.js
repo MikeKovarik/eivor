@@ -1,6 +1,7 @@
 import './polyfill.js'
 import {ImageDescriptor, promiseUrlLoad, parseBgUrl, promiseLoad, isLoaded} from './ImageDescriptor.js'
 
+export * from './ImageDescriptor.js'
 
 // TODO: cleanup
 // TODO: cancellable

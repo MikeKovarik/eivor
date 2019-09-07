@@ -355,6 +355,12 @@ export class ImageDescriptor {
 	//get insetBottomRatio() {return this.insetBottom / this.containerWidth}
 	//get insetLeftRatio()   {return this.insetLeft / this.containerWidth}
 
+	// clip-path applies to container, not the whole image (contentWidth can be larger than container).
+	// background-position can also offset the image within the container.
+	// this the inside offset (aka inset) and clip-path compete against each other.
+	// E.g. given we have bg-position:10px, the image is starts at 10th pixel from left edge of the container.
+	//      If we apply clip-path:inset(10px), nothing happens, both bg-post and clip start at containers edge.
+	//      Only if we changed it to clip-path:inset(11px), then the bg would begin clipped.
 	get cropLeft()   {return Math.max(this.insetLeft,   this.clipLeft)}
 	get cropRight()  {return Math.max(this.insetRight,  this.clipRight)}
 	get cropTop()    {return Math.max(this.insetTop,    this.clipTop)}
@@ -366,6 +372,16 @@ function percentToRatio(percentString) {
 }
 function pxToNumber(pxString) {
 	return Number(pxString.slice(0, -2))
+}
+
+export function extractUrl(node) {
+	if (node.localStorage === 'img') {
+		return node.src
+	} else {
+		var {backgroundImage} = window.getComputedStyle(node)
+		if (backgroundImage)
+			return parseBgUrl(backgroundImage)
+	}
 }
 
 export function promiseUrlLoad(url) {
