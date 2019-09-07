@@ -1,4 +1,3 @@
-import './polyfill.js'
 import {ImageDescriptor, promiseLoad, isLoaded} from './ImageDescriptor.js'
 
 
