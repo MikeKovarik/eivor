@@ -31,30 +31,75 @@
 </head>
 <body>
 
-	<h3>working</h3>
+	<h3>same aspect ratios</h3>
 
 	<div spaced layout>
 
-		<div class="fake-view">
-			<div class="source" style="
-				width: 100px;
-				height: 100px;
-				background-size: cover;
-				background-position: center;
-				background-image: url('../img/IMG_20180912_184217-small.jpg');
-			"></div>
-			<img class="target" fit contain src="../img/IMG_20180912_184217-medium.jpg">
+		<div>
+			<p>small source, big target</p>
+			<p>hides source, manipulates target from source's position and size</p>
+			<div class="fake-view">
+				<div class="source" style="
+					width: 100px;
+					height: 100px;
+					background-size: cover;
+					background-position: center;
+					background-image: url('../img/IMG_20180912_184217-small.jpg');
+				"></div>
+				<img class="target" fit contain src="../img/IMG_20180912_184217-medium.jpg">
+			</div>
 		</div>
 
-		<div class="fake-view">
-			<img class="source" fit contain src="../img/IMG_20180912_184217-medium.jpg">
-			<div class="target" style="
-				width: 100px;
-				height: 100px;
-				background-size: cover;
-				background-position: center;
-				background-image: url('../img/IMG_20180912_184217-small.jpg');
-			"></div>
+		<div>
+			<p>big source, small target</p>
+			<p>hides target, manipulates source into targets's position and size</p>
+			<div class="fake-view">
+				<img class="source" fit contain src="../img/IMG_20180912_184217-medium.jpg">
+				<div class="target" style="
+					width: 100px;
+					height: 100px;
+					background-size: cover;
+					background-position: center;
+					background-image: url('../img/IMG_20180912_184217-small.jpg');
+				"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<h3>differect aspects - photo is 3:2, miniature is a square</h3>
+
+	<div spaced layout>
+
+		<div>
+			<p>small source, big target</p>
+			<p>hides source, manipulates target from source's position and size</p>
+			<div class="fake-view">
+				<div class="source" style="
+					width: 100px;
+					height: 100px;
+					background-size: cover;
+					background-position: center;
+					background-image: url('../img/IMG_20180912_184217-small-center.jpg');
+				"></div>
+				<img class="target" fit contain src="../img/IMG_20180912_184217-medium.jpg">
+			</div>
+		</div>
+
+		<div>
+			<p>big source, small target</p>
+			<p>hides target, manipulates source into targets's position and size</p>
+			<p>broken</p>
+			<div class="fake-view">
+				<img class="source" fit contain src="../img/IMG_20180912_184217-medium.jpg">
+				<div class="target" style="
+					width: 100px;
+					height: 100px;
+					background-size: cover;
+					background-position: center;
+					background-image: url('../img/IMG_20180912_184217-small-center.jpg');
+				"></div>
+			</div>
 		</div>
 
 	</div>
