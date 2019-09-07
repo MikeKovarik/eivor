@@ -196,6 +196,8 @@ export class ImageTransition {
 
 	setupCrop() {
 		if (this.animatesSource) {
+			// TODO: dont do this. instead use the animatesSource/animatesTarget
+			// and use different naming. anitedDesc/staticDesc instead of sd/td.
 			var sd = this.td
 			var td = this.sd
 		} else {
@@ -216,23 +218,21 @@ export class ImageTransition {
 			this.keyframes.transform[1] += `translate(${-translateX}px, ${-translateY}px)`
 		}
 
+		// WARNING: cropLeft = Math.max(this.insetLeft, this.clipLeft)
+		//          
 		// clip-path applies to container, not the whole image (contentWidth can be larger than container).
 		// background-position can also offset the image within the container.
 		// this the inside offset (aka inset) and clip-path compete against each other.
 		// E.g. given we have bg-position:10px, the image is starts at 10th pixel from left edge of the container.
 		//      If we apply clip-path:inset(10px), nothing happens, both bg-post and clip start at containers edge.
 		//      Only if we changed it to clip-path:inset(11px), then the bg would begin clipped.
-		var sdCropLeft   = Math.max(sd.insetLeft,   sd.clipLeft)
-		var sdCropRight  = Math.max(sd.insetRight,  sd.clipRight)
-		var sdCropTop    = Math.max(sd.insetTop,    sd.clipTop)
-		var sdCropBottom = Math.max(sd.insetBottom, sd.clipBottom)
 		// Getting percentage of the total content width that is not displayed (either clipped or shifted).
 		// Not using container width, becasue content image can be stretched. Plus it'll be easier to apply
 		// the percentage to target's size to be clipped.
-		var sdCropLeftRatio   = sdCropLeft   / this.sdVirtualWidth
-		var sdCropRightRatio  = sdCropRight  / this.sdVirtualWidth
-		var sdCropTopRatio    = sdCropTop    / this.sdVirtualHeight
-		var sdCropBottomRatio = sdCropBottom / this.sdVirtualHeight
+		var sdCropLeftRatio   = sd.cropLeft   / this.sdVirtualWidth
+		var sdCropRightRatio  = sd.cropRight  / this.sdVirtualWidth
+		var sdCropTopRatio    = sd.cropTop    / this.sdVirtualHeight
+		var sdCropBottomRatio = sd.cropBottom / this.sdVirtualHeight
 		// One thing we cannot avoid in recrop mode is how much of the background image is cropped by being shited outside
 		// the container. I.e. how much of it is cropped by background-position (usually in combination with background-size:cover).
 		// Recrop is only used if the whole source image is contained within target. I.e if we can fit source into target.

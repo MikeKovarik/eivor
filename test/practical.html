@@ -1259,7 +1259,7 @@
 
 
 
-	<h2>bg-position:contain, inset | clip-path (on the right side)</h2>
+	<h2>bg-size:contain, inset | clip-path (on the right side)</h2>
 	<p>CRITICAL! These examples are critical. If they work, everything works.</p>
 
 	<h3>insetted contain target</h3>
@@ -1471,6 +1471,106 @@
 			background-image: url(../img/olo-park-3-2-medium.jpg);
 			background-repeat: no-repeat;
 			background-size: 200px 200px;
+		"></div>
+	</div>
+
+	<h2>bg-position & clip</h2>
+
+	<h3>background-position (broken)</h3>
+	<div spaced layout>
+		<div class="source" style="
+			width: 100px;
+			height: 100px;
+			background-position: 25px 0;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+		<div class="target" style="
+			width: 100px;
+			height: 100px;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+	</div>
+
+	<h3>clip-path</h3>
+	<div spaced layout>
+		<div class="source" style="
+			width: 100px;
+			height: 100px;
+			clip-path: inset(0px 0px 0px 25px);
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+		<div class="target" style="
+			width: 100px;
+			height: 100px;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+	</div>
+
+	<h3>background-position & clip-path combined on one side (broken)</h3>
+	<div spaced layout>
+		<div class="source" style="
+			width: 100px;
+			height: 100px;
+			clip-path: inset(0px 0px 0px 25px);
+			background-position: 25px 0;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+		<div class="target" style="
+			width: 100px;
+			height: 100px;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+	</div>
+
+	<h3>background-position & clip-path combined on both sides (broken)</h3>
+	<div spaced layout>
+		<div class="source" style="
+			width: 100px;
+			height: 100px;
+			clip-path: inset(0px 25px 0px 25px);
+			background-position: 25px 0;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+		<div class="target" style="
+			width: 100px;
+			height: 100px;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+	</div>
+
+	<h3>background-position pushed outside & clip cuts out even more (broken)</h3>
+	<div spaced layout>
+		<div class="source" style="
+			width: 100px;
+			height: 100px;
+			clip-path: inset(0px 0px 0px 25px);
+			background-position: -25px 0;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		"></div>
+		<div class="target" style="
+			width: 100px;
+			height: 100px;
+			background-image: url(../img/olo-park-1-1-center-small.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
 		"></div>
 	</div>
 
