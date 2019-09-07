@@ -115,12 +115,18 @@ export class ImageTransition {
 			*/
 			
 			if (this.sourceContainedWithinTarget) {
+				// DEFAULT scenario. thumbnail image in gallery transitions to big image in detail
+				// by animating the big image from thumbnails size and position
 				this.mode = 'crop'
-				this.reversed = false
+				this.animatesTarget = true
+				this.animatesSource = false
 				this.nodeToAnimate = this.target
 			} else if (this.targetContainedWithinSource) {
+				// REVERSED scenario. big image closes into thumbnail image in gallery
+				// by animating the big image into thumbnails size and position
 				this.mode = 'crop'
-				this.reversed = true
+				this.animatesTarget = false
+				this.animatesSource = true
 				this.nodeToAnimate = this.source
 			} else {
 				// TODO: first version of the project always animated target from source's position and size.
@@ -144,7 +150,7 @@ export class ImageTransition {
 		this.containerTranslateX = sd.x - td.x
 		this.containerTranslateY = sd.y - td.y
 
-		if (this.reversed) {
+		if (this.animatesSource) {
 			this.keyframes.transform = [
 				`translate(0px, 0px)`,
 				`translate(${-this.containerTranslateX}px, ${-this.containerTranslateY}px)`,
@@ -156,8 +162,8 @@ export class ImageTransition {
 			]
 		}
 
-		//this.targetFromSource = !this.reversed // aka default
-		//this.sourceToTarget = this.reversed // aka reversed
+		//this.targetFromSource = this.animatesTarget // aka default
+		//this.sourceToTarget = this.animatesSource // aka reversed
 
 		switch (this.mode) {
 			case 'crop':
@@ -189,7 +195,7 @@ export class ImageTransition {
 	}
 
 	setupCrop() {
-		if (this.reversed) {
+		if (this.animatesSource) {
 			var sd = this.td
 			var td = this.sd
 		} else {
@@ -198,7 +204,7 @@ export class ImageTransition {
 
 		var translateX = this.sdOriginX - (this.tdOriginX * this.scale)
 		var translateY = this.sdOriginY - (this.tdOriginY * this.scale)
-		if (!this.reversed) {
+		if (this.animatesTarget) {
 			this.keyframes.transform[0] += `translate(${translateX}px, ${translateY}px)`
 			this.keyframes.transform[0] += `scale(${this.scale})`
 			this.keyframes.transform[1] += `translate(0px, 0px)`
@@ -231,7 +237,7 @@ export class ImageTransition {
 		// the container. I.e. how much of it is cropped by background-position (usually in combination with background-size:cover).
 		// Recrop is only used if the whole source image is contained within target. I.e if we can fit source into target.
 		// But we need to be aware of how much of source is cropped by bg-position. aka outset.
-		if (!this.reversed) {
+		if (this.animatesTarget) {
 			var outsetLeftRatioDiff   = this.sdOutsetLeftRatio   - this.tdOutsetLeftRatio
 			var outsetRightRatioDiff  = this.sdOutsetRightRatio  - this.tdOutsetRightRatio
 			var outsetTopRatioDiff    = this.sdOutsetTopRatio    - this.tdOutsetTopRatio
@@ -252,7 +258,7 @@ export class ImageTransition {
 			`inset(${clipTop}px ${clipRight}px ${clipBottom}px ${clipLeft}px)`,
 			`inset(${td.clipTop}px ${td.clipRight}px ${td.clipBottom}px ${td.clipLeft}px)`,
 		]
-		if (this.reversed) {
+		if (this.animatesSource) {
 			this.keyframes.clipPath.reverse()
 		}
 	}
