@@ -10,6 +10,13 @@ export * from './ImageDescriptor.js'
 var defaultOptions = {
 	fill: 'both',
 	easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+	// When animating single element between two views (leaving first, entering second)
+	// we need the element to be cloned and positioned outside those two views, directly
+	// to body or given container
+	mode: undefined,
+	cloneZindex: undefined,
+	cloneContainer: undefined,
+	//cloneContainer: document.body
 }
 
 var timeout = millis => new Promise(resolve => setTimeout(resolve, millis))
@@ -29,7 +36,7 @@ export class ImageTransition {
 	constructor(source, target, options = {duration: 200}) {
 		this.source = source
 		this.target = target
-		this.options = Object.assign(this, defaultOptions, options)
+		this.options = Object.assign(this, defaultOptions, options) // ???
 		this.sd = new ImageDescriptor(source)
 		this.td = new ImageDescriptor(target)
 		this.ready = this.setup()
@@ -46,8 +53,12 @@ export class ImageTransition {
 		this.imagesMatch = this.sameUrls || this.sameAspects
 
 		if (this.imagesMatch) {
+			console.log('a')
 			this.scale = sd.contentWidth / td.contentWidth
+            console.log('setup -> td.contentWidth', td.contentWidth)
+            console.log('setup -> sd.contentWidth', sd.contentWidth)
 			this.sdVirtualWidth  = sd.contentWidth
+            console.log('setup -> this.sdVirtualWidth', this.sdVirtualWidth)
 			this.sdVirtualHeight = sd.contentHeight
 		} else if (sd.naturalAspectRatio >= 1 && td.naturalAspectRatio >= 1) {
 			// 1) Both images are landscape, or 2) one is landscape and the other is at least square
@@ -162,7 +173,16 @@ export class ImageTransition {
 				`translate(0px, 0px)`,
 			]
 		}
-
+/*
+		if (sd.computed.borderRadius !== td.computed.borderRadius) {
+			console.warn('border radius and clip is not yet fully implemented')
+			// TODO: fully implement this (probably through clip??). this is just temp implementation
+			this.keyframes.borderRadius = [
+				sd.computed.borderRadius,
+				td.computed.borderRadius,
+			]
+		}
+*/
 		//this.targetFromSource = this.animatesTarget // aka default
 		//this.sourceToTarget = this.animatesSource // aka reversed
 
@@ -204,6 +224,9 @@ export class ImageTransition {
 		} else {
 			var {sd, td} = this
 		}
+
+		console.log('sd', sd)
+		console.log('td', td)
 
 		var translateX = this.sdOriginX - (this.tdOriginX * this.scale)
 		var translateY = this.sdOriginY - (this.tdOriginY * this.scale)
@@ -259,6 +282,9 @@ export class ImageTransition {
 			`inset(${clipTop}px ${clipRight}px ${clipBottom}px ${clipLeft}px)`,
 			`inset(${td.clipTop}px ${td.clipRight}px ${td.clipBottom}px ${td.clipLeft}px)`,
 		]
+
+        console.log('keyframes.clipPath', this.keyframes.clipPath)
+
 		if (this.animatesSource) {
 			this.keyframes.clipPath.reverse()
 		}
@@ -282,19 +308,24 @@ export class ImageTransition {
 		var {sd, td} = this
 		this.clone = document.createElement('div')
 		Object.assign(this.clone.style, {
+			position: 'absolute',
 			willChange: 'all',
 			width: td.containerWidth + 'px',
 			height: td.containerHeight + 'px',
-			backgroundImage: td.computed.backgroundImage,
+			backgroundImage: td.img ? `url('${td.img.src}')` : td.computed.backgroundImage,
 			backgroundPosition: td.computed.backgroundPosition,
 			backgroundSize: td.computed.backgroundSize,
 			backgroundRepeat: td.computed.backgroundRepeat,
 			backgroundColor: td.computed.backgroundColor,
-			zIndex: td.computed.zIndex,
+			zIndex: this.cloneZindex || td.computed.zIndex,
 		})
 		this.clone.style.visibility = 'hidden'
-		adjacentNode.after(this.clone)
+		if (this.cloneContainer)
+			this.cloneContainer.append(this.clone)
+		else
+			adjacentNode.after(this.clone)
 		// give the clone some time to load and render the image to prevent unstyled flash
+		// TODO: load the image using img.onload ????
 		await timeout(20)
 		this.clone.style.visibility = ''
 		this.target.style.visibility = 'hidden'
@@ -309,8 +340,16 @@ export class ImageTransition {
 		// RECREATE strategy literally means the target image gets taken out of the flow
 		// or recreated by a temporary new element which is then animated.
 
-		this.keyframes.left = pair(td.left + 'px')
-		this.keyframes.top  = pair(td.top  + 'px')
+		if (this.cloneContainer) {
+			// TODO: work in progress
+			// investigate why x/y and top/left values are different
+			this.keyframes.left = pair(td.x + 'px')
+			this.keyframes.top  = pair(td.y  + 'px')
+		} else {
+			this.keyframes.left = pair(td.left + 'px')
+			this.keyframes.top  = pair(td.top  + 'px')
+		}
+
 		this.keyframes.position = pair('absolute')
 		// Temporarily resize target element to the same size as its background image's natural size.
 		// background-size:cover is necessary to prevent problems with hardcoded, contain, and pretty much any other sizing.
@@ -349,18 +388,27 @@ export class ImageTransition {
 	async play() {
 		await this.ready
 		this.keyframes.zIndex = [1,1]
-		this.animation = this.nodeToAnimate.animate(this.keyframes, this.options)
-		this.otherNode = this.nodeToAnimate !== this.source ? this.source : this.target
-		this.otherNode.style.visibility = 'hidden'
+		this.createAnimation(true)
+		let otherNode = this.nodeToAnimate !== this.source ? this.source : this.target
+		otherNode.style.visibility = 'hidden'
 		//this.source.style.visibility = 'hidden'
-		try {
-			await this.animation.finished
-		} catch(err) {}
-		if (this.placeholder) this.placeholder.remove()
-		if (this.clone) this.clone.remove()
+		return this.finished = this.animation.finished
+	}
+
+	createAnimation(autoCancel = true) {
+		let animation = this.nodeToAnimate.animate(this.keyframes, this.options)
+		animation.oncancel = this.onAnimationCancel
+		if (autoCancel) animation.onfinish = () => setTimeout(() => animation.cancel())
+		this.animation = animation
+		return animation
+	}
+
+	onAnimationCancel = () => {
+		console.log('on cancel')
 		this.source.style.visibility = ''
 		this.target.style.visibility = ''
-		this.animation.cancel()
+		if (this.placeholder) this.placeholder.remove()
+		if (this.clone) this.clone.remove()
 	}
 
 }
