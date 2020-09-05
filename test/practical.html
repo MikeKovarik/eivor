@@ -30,6 +30,17 @@
 			[columns="3"] {
 				grid-template-columns: auto auto min-content;
 			}
+			[columns="4"] {
+				grid-template-columns: auto auto auto min-content;
+			}
+		}
+		.source {
+			width: var(--source-width);
+			height: var(--source-height);
+		}
+		.target {
+			width: var(--target-width);
+			height: var(--target-height);
 		}
 	</style>
 
@@ -384,132 +395,452 @@
 		"></div>
 	</div>
 
-	<hr>
 
-		<h3>plain</h3>
-		<div spaced layout>
-			<div class="source" style="
-				width: 100px;
-				height: 100px;
-				background-size: cover;
-				background-image: url(../img/bastille-wild-world.jpg);
-			"></div>
-			<div class="target" style="
-				width: 200px;
-				height: 200px;
-				background-size: contain;
-				background-repeat: no-repeat;
-				background-image: url(../img/bastille-wild-world.jpg);
-			"></div>
-		</div>
 
-		<h3>cover to cover</h3>
-		<div spaced layout>
-			<div class="source" style="
-				width: 100px;
-				height: 100px;
-				background-size: cover;
-				background-image: url(../img/bastille-wild-world.jpg);
-			"></div>
-			<div class="target" style="
-				width: 200px;
-				height: 200px;
-				background-size: cover;
-				background-repeat: no-repeat;
-				background-image: url(../img/bastille-wild-world.jpg);
-			"></div>
-		</div>
 
-		<h3>contain to contain</h3>
-		<div spaced layout>
-			<div class="source" style="
-				width: 100px;
-				height: 100px;
-				background-size: contain;
-				background-image: url(../img/bastille-wild-world.jpg);
-			"></div>
-			<div class="target" style="
-				width: 200px;
-				height: 200px;
-				background-size: contain;
-				background-repeat: no-repeat;
-				background-image: url(../img/bastille-wild-world.jpg);
-			"></div>
-		</div>
+
+
+
+
+
+
 
 	<hr>
 
-	<h1>&lt;img&gt; to &lt;img&gt;</h1>
-	<p>note: make the same demos with bg as well</p>
+	<h1>symetric</h1>
 
-	<div grid columns="3">
+	<div grid columns="4" style="--source-width: 70px; --source-height: 70px; --target-width: 140px; --target-height: 140px;">
 		<div>
-			<h2>symetric target</h2>
+			<h2>&lt;img&gt; to &lt;img&gt;</h2>
 
 			<h3>fill (default)</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg">
-				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg">
+				<img class="source" src="../img/bastille-wild-world.jpg">
+				<img class="target" src="../img/bastille-wild-world.jpg">
 			</div>
 
 			<h3>cover to cover</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
-				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
 			</div>
 
 			<h3>contain to contain</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
-				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
 			</div>
 
 		</div>
 		<div>
-			<h2>asymetric target</h2>
+			<h2>bg to bg</h2>
 
-			<h3 broken>plain</h3>
+			<h3>fill (100% 100%)</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg">
-				<img class="target" width="100" height="200" src="../img/bastille-wild-world.jpg">
+				<div class="source" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<div class="target" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
 			</div>
 
 			<h3>cover to cover</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
-				<img class="target" width="100" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<div class="source" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<div class="target" style="
+					background-size: cover;
+					background-repeat: no-repeat;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
 			</div>
 
 			<h3>contain to contain</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
-				<img class="target" width="100" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<div class="source" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<div class="target" style="
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
 			</div>
 
 		</div>
 		<div>
-			<h2>asymetric source</h2>
+			<h2>&lt;img&gt; to bg</h2>
 
-			<h3 broken>plain</h3>
+			<h3>fill (100% 100%)</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="50" src="../img/bastille-wild-world.jpg">
-				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg">
+				<img class="source" src="../img/bastille-wild-world.jpg">
+				<div class="target" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
 			</div>
 
 			<h3>cover to cover</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="50" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
-				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<div class="target" style="
+					background-size: cover;
+					background-repeat: no-repeat;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
 			</div>
 
-			<h3 broken>contain to contain</h3>
+			<h3>contain to contain</h3>
 			<div spaced layout>
-				<img class="source" width="100" height="50" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
-				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<div class="target" style="
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+		</div>
+		<div>
+			<h2>bg to &lt;img&gt;</h2>
+
+			<h3>fill (default)</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg">
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+			</div>
+
+			<h3>contain to contain</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
 			</div>
 
 		</div>
 	</div>
+
+
+
+
+
+
+
+
+
+
+	<h1>asymetric target</h1>
+
+	<div grid columns="4" style="--source-width: 100px; --source-height: 100px; --target-width: 100px; --target-height: 200px;">
+		<div>
+			<h2>&lt;img&gt; to &lt;img&gt;</h2>
+
+			<h3 broken>fill (default)</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg">
+				<img class="target" src="../img/bastille-wild-world.jpg">
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+			</div>
+
+			<h3>contain to contain</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+			</div>
+
+		</div>
+		<div>
+			<h2>bg to bg</h2>
+
+			<h3 broken>fill (100% 100%)</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<div class="target" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<div class="target" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+				"></div>
+			</div>
+
+			<h3>contain to contain</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<div class="target" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+					background-repeat: no-repeat;
+				"></div>
+			</div>
+
+		</div>
+		<div>
+			<h2>&lt;img&gt; to bg</h2>
+
+			<h3 broken>fill</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg">
+				<div class="target" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<div class="target" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+				"></div>
+			</div>
+
+			<h3>contain to contain</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<div class="target" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+					background-repeat: no-repeat;
+				"></div>
+			</div>
+
+		</div>
+		<div>
+			<h2>bg to &lt;img&gt;</h2>
+
+			<h3 broken>fill</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg">
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+			</div>
+
+			<h3>contain to contain</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+	<h1>asymetric source</h1>
+
+	<div grid columns="4" style="--source-width: 100px; --source-height: 200px; --target-width: 100px; --target-height: 100px;">
+		<div>
+			<h2>&lt;img&gt; to &lt;img&gt;</h2>
+
+			<h3 broken>fill (default)</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg">
+				<img class="target" src="../img/bastille-wild-world.jpg">
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+			</div>
+
+			<h3 broken>contain to contain</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+			</div>
+
+		</div>
+		<div>
+			<h2>bg to bg</h2>
+
+			<h3 broken>fill (100% 100%)</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<div class="target" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+				"></div>
+				<div class="target" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+			<h3 broken>contain to contain</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+					background-repeat: no-repeat;
+				"></div>
+				<div class="target" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+		</div>
+		<div>
+			<h2>&lt;img&gt; to bg</h2>
+
+			<h3 broken>fill (100% 100%)</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg">
+				<div class="target" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+				<div class="target" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+			<h3 broken>contain to contain</h3>
+			<div spaced layout>
+				<img class="source" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+				<div class="target" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+			</div>
+
+		</div>
+		<div>
+			<h2>bg to &lt;img&gt;</h2>
+
+			<h3 broken>fill (default)</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: 100% 100%;
+					background-image: url(../img/bastille-wild-world.jpg);
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg">
+			</div>
+
+			<h3>cover to cover</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: cover;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
+			</div>
+
+			<h3 broken>contain to contain</h3>
+			<div spaced layout>
+				<div class="source" style="
+					background-size: contain;
+					background-image: url(../img/bastille-wild-world.jpg);
+					background-position: center;
+					background-repeat: no-repeat;
+				"></div>
+				<img class="target" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	<hr>
 
