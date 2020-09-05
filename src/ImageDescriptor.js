@@ -57,6 +57,7 @@ export class ImageDescriptor {
 
 		this.cover   = this.computed.objectFit === 'cover'
 		this.contain = this.computed.objectFit === 'contain'
+		this.fill    = !this.cover && !this.contain
 
 		this.positionX = '50%'
 		this.positionY = '50%'

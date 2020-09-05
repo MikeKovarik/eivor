@@ -8,12 +8,28 @@
 
 	<link rel="stylesheet" type="text/css" href="./demos.css">
 	<style>
+		body {
+			padding: 16px;
+		}
 		[broken] {
 			color: #8b0000;
 			text-decoration: line-through;
 		}
 		[broken]::after {
 			content: ' (broken)';
+		}
+		[grid] {
+			display: grid;
+		}
+		@media only screen and (min-width: 600px) {
+			[columns="2"] {
+				grid-template-columns: auto auto;
+			}
+		}
+		@media only screen and (min-width: 1000px) {
+			[columns="3"] {
+				grid-template-columns: auto auto min-content;
+			}
 		}
 	</style>
 
@@ -370,23 +386,79 @@
 
 	<hr>
 
-	<div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
+		<h3>plain</h3>
+		<div spaced layout>
+			<div class="source" style="
+				width: 100px;
+				height: 100px;
+				background-size: cover;
+				background-image: url(../img/bastille-wild-world.jpg);
+			"></div>
+			<div class="target" style="
+				width: 200px;
+				height: 200px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-image: url(../img/bastille-wild-world.jpg);
+			"></div>
+		</div>
+
+		<h3>cover to cover</h3>
+		<div spaced layout>
+			<div class="source" style="
+				width: 100px;
+				height: 100px;
+				background-size: cover;
+				background-image: url(../img/bastille-wild-world.jpg);
+			"></div>
+			<div class="target" style="
+				width: 200px;
+				height: 200px;
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-image: url(../img/bastille-wild-world.jpg);
+			"></div>
+		</div>
+
+		<h3>contain to contain</h3>
+		<div spaced layout>
+			<div class="source" style="
+				width: 100px;
+				height: 100px;
+				background-size: contain;
+				background-image: url(../img/bastille-wild-world.jpg);
+			"></div>
+			<div class="target" style="
+				width: 200px;
+				height: 200px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-image: url(../img/bastille-wild-world.jpg);
+			"></div>
+		</div>
+
+	<hr>
+
+	<h1>&lt;img&gt; to &lt;img&gt;</h1>
+	<p>note: make the same demos with bg as well</p>
+
+	<div grid columns="3">
 		<div>
 			<h2>symetric target</h2>
 
-			<h3 broken>plain img to img</h3>
+			<h3>fill (default)</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg">
 				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg">
 			</div>
 
-			<h3>img cover to img cover</h3>
+			<h3>cover to cover</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
 				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
 			</div>
 
-			<h3>img cover to img contain</h3>
+			<h3>contain to contain</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
 				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
@@ -396,19 +468,19 @@
 		<div>
 			<h2>asymetric target</h2>
 
-			<h3 broken>plain img to img</h3>
+			<h3 broken>plain</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg">
 				<img class="target" width="100" height="200" src="../img/bastille-wild-world.jpg">
 			</div>
 
-			<h3>img cover to img cover</h3>
+			<h3>cover to cover</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
 				<img class="target" width="100" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
 			</div>
 
-			<h3>img cover to img contain</h3>
+			<h3>contain to contain</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="100" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
 				<img class="target" width="100" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
@@ -418,19 +490,19 @@
 		<div>
 			<h2>asymetric source</h2>
 
-			<h3 broken>plain img to img</h3>
+			<h3 broken>plain</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="50" src="../img/bastille-wild-world.jpg">
 				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg">
 			</div>
 
-			<h3>img cover to img cover</h3>
+			<h3>cover to cover</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="50" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
 				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: cover">
 			</div>
 
-			<h3 broken>img cover to img contain</h3>
+			<h3 broken>contain to contain</h3>
 			<div spaced layout>
 				<img class="source" width="100" height="50" src="../img/bastille-wild-world.jpg" style="object-fit: contain">
 				<img class="target" width="200" height="200" src="../img/bastille-wild-world.jpg" style="object-fit: contain">

@@ -53,12 +53,8 @@ export class ImageTransition {
 		this.imagesMatch = this.sameUrls || this.sameAspects
 
 		if (this.imagesMatch) {
-			console.log('a')
 			this.scale = sd.contentWidth / td.contentWidth
-            console.log('setup -> td.contentWidth', td.contentWidth)
-            console.log('setup -> sd.contentWidth', sd.contentWidth)
 			this.sdVirtualWidth  = sd.contentWidth
-            console.log('setup -> this.sdVirtualWidth', this.sdVirtualWidth)
 			this.sdVirtualHeight = sd.contentHeight
 		} else if (sd.naturalAspectRatio >= 1 && td.naturalAspectRatio >= 1) {
 			// 1) Both images are landscape, or 2) one is landscape and the other is at least square
@@ -225,9 +221,6 @@ export class ImageTransition {
 			var {sd, td} = this
 		}
 
-		console.log('sd', sd)
-		console.log('td', td)
-
 		var translateX = this.sdOriginX - (this.tdOriginX * this.scale)
 		var translateY = this.sdOriginY - (this.tdOriginY * this.scale)
 		if (this.animatesTarget) {
@@ -282,8 +275,6 @@ export class ImageTransition {
 			`inset(${clipTop}px ${clipRight}px ${clipBottom}px ${clipLeft}px)`,
 			`inset(${td.clipTop}px ${td.clipRight}px ${td.clipBottom}px ${td.clipLeft}px)`,
 		]
-
-        console.log('keyframes.clipPath', this.keyframes.clipPath)
 
 		if (this.animatesSource) {
 			this.keyframes.clipPath.reverse()
