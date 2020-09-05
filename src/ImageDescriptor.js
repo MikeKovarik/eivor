@@ -375,7 +375,7 @@ function pxToNumber(pxString) {
 }
 
 export function extractUrl(node) {
-	if (node.localStorage === 'img') {
+	if (node.localName === 'img') {
 		return node.src
 	} else {
 		var {backgroundImage} = window.getComputedStyle(node)
