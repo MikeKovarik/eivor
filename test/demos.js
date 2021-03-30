@@ -17,7 +17,11 @@ var controlPanelhtml = `
 		<p id="status"></p>
 	</div>
 `
-var controlPanelFragment = document.createRange().createContextualFragment(controlPanelhtml)
+
+function nodeFromString(htmlString) {
+	return document.createRange().createContextualFragment(htmlString)
+}
+var controlPanelFragment = nodeFromString(controlPanelhtml)
 document.body.prepend(controlPanelFragment)
 
 var $duration = document.querySelector('#duration')

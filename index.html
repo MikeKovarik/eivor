@@ -96,10 +96,36 @@
 			margin: 24px 0;
 			max-width: 800px;
 		}
-		.subjects {
+		.demo .subjects {
 			padding: 12px 0;
 			align-items: center;
 			justify-content: space-around;
+		}
+		.demo h2 {
+			display: flex;
+			align-items: center;
+		}
+		.demo button {
+			margin-left: 12px;
+			margin-top: 4px;
+			padding: 4px 8px;
+			border-radius: 4px;
+			border: 1px solid rgba(var(--accent-rgb), 0.3);
+			background-color: rgba(80, 80, 80, 0.1);
+			outline: none;
+			color: #FFF;
+			text-transform: uppercase;
+			font-weight: 600;
+		}
+		.demo button:hover {
+			color: rgb(var(--accent-rgb));
+			border: 1px solid rgba(var(--accent-rgb), 0.6);
+			background-color: rgba(80, 80, 80, 0.15);
+		}
+		.demo button:active {
+			opacity: 1;
+			border: 1px solid rgb(var(--accent-rgb));
+			background-color: rgba(80, 80, 80, 0.2);
 		}
 
 		/* overrides for debug style */
@@ -127,10 +153,13 @@
 	<br>
 
 	<p>The gray dashed line around each photo shows its actual size and crop position in regards to <code>background-position</code>, <code>background-size</code>, <code>object-fit</code>, etc...</p>
-	<p>For more debug examples, visit <a href="./test/practical.html">./test/practical.html</a>, <a href="./test/directions.html">./test/directions.html</a> or  <a href="./test/descriptor.html">./test/descriptor.html</a></p>
+	<p>For more debug examples, visit <a href="./test/practical.html">./test/practical.html</a>, <a href="./test/directions.html">./test/directions.html</a> or  <a href="./test/descriptor.html">./test/descriptor.html</a>.</p>
 
 
 	<div id="demo1" class="demo">
+
+		<h2>Demo 1</h2>
+		<p>Source and target are the same 3:2 image displayed differently.</p>
 
 		<style>
 			.source {
@@ -151,21 +180,12 @@
 			}
 		</style>
 
-		<h2>Demo 1</h2>
-		<p>Transitions the same image, displayed differently.</p>
-
-		<div spaced layout>
-			<pre></pre>
-			<pre></pre>
-		</div>
-		<div spaced layout class="subjects">
-			<div class="source"></div>
-			<div class="target"></div>
-		</div>
-
 	</div>
 
 	<div id="demo2" class="demo">
+
+		<h2>Demo 2</h2>
+		<p>Source 1:1 thumbnail (cropped from left side) transitions into original 4:3 image</p>
 
 		<style>
 			.source {
@@ -187,21 +207,12 @@
 			}
 		</style>
 
-		<h2>Demo 2</h2>
-		<p>1:1 thumbnail (cropped from left side) into original 4:3 image</p>
-
-		<div spaced layout>
-			<pre></pre>
-			<pre></pre>
-		</div>
-		<div spaced layout class="subjects">
-			<div class="source"></div>
-			<div class="target"></div>
-		</div>
-
 	</div>
 
 	<div id="demo3" class="demo">
+
+		<h2>Demo 3</h2>
+		<p>Source and target are the same 2:3 image displayed differently.</p>
 
 		<style>
 			.source {
@@ -226,21 +237,12 @@
 			}
 		</style>
 
-		<h2>Demo 3</h2>
-		<p>Transition the same 3:4 tall image, displayed differently</p>
-
-		<div spaced layout>
-			<pre></pre>
-			<pre></pre>
-		</div>
-		<div spaced layout class="subjects">
-			<div class="source"></div>
-			<div class="target"></div>
-		</div>
-
 	</div>
 
 	<div id="demo4" class="demo">
+
+		<h2>Demo 4</h2>
+		<p>Source and target are the same 1:1 with different sizing crop.</p>
 
 		<style>
 			.source {
@@ -261,18 +263,6 @@
 				background-image: url('./img/bastille-wild-world.jpg');
 			}
 		</style>
-
-		<h2>Demo 4</h2>
-		<p>TODO</p>
-
-		<div spaced layout>
-			<pre></pre>
-			<pre></pre>
-		</div>
-		<div spaced layout class="subjects">
-			<div class="source"></div>
-			<div class="target"></div>
-		</div>
 
 	</div>
 <!--
@@ -301,15 +291,6 @@
 		<h2>Demo 3</h2>
 		<p>TODO</p>
 
-		<div spaced layout>
-			<pre></pre>
-			<pre></pre>
-		</div>
-		<div spaced layout class="subjects">
-			<div class="source"></div>
-			<div class="target"></div>
-		</div>
-
 	</div>
 
 	<div id="demo4" class="demo">
@@ -337,24 +318,39 @@
 		<h2>Demo 3</h2>
 		<p>TODO</p>
 
-		<div spaced layout>
-			<pre></pre>
-			<pre></pre>
-		</div>
-		<div spaced layout class="subjects">
-			<div class="source"></div>
-			<div class="target"></div>
-		</div>
-
 	</div>
 -->
+
+	<script>
+		localStorage.demoDebug = true
+		localStorage.demoDuration = 1400
+	</script>
 	<script type="module" src="./test/demos.js"></script>
 	
 	<script>
 
 		let demoContainers = Array.from(document.querySelectorAll('div.demo'))
 
+		function nodeFromString(htmlString) {
+			return document.createRange().createContextualFragment(htmlString)
+		}
+
+		const playButtonHtml = `
+			<button>▷ play</button>
+		`
+		const demoSharedHtml = `
+			<div spaced layout>
+				<pre></pre>
+				<pre></pre>
+			</div>
+			<div spaced layout class="subjects">
+				<div class="source"></div>
+				<div class="target"></div>
+			</div>
+		`
+
 		for (let container of demoContainers) {
+			container.append(nodeFromString(demoSharedHtml))
 			let containerId = '#' + container.id
 			let [sourceStyle, targetStyle] = container.querySelectorAll('style')
 			let sourceRule = sourceStyle.sheet.rules[0]
@@ -364,6 +360,13 @@
 			let [sourcePre, targetPre] = container.querySelectorAll('pre')
 			sourcePre.innerHTML = sanitizedCode(sourceStyle.innerHTML)
 			targetPre.innerHTML = sanitizedCode(targetStyle.innerHTML)
+			// play button
+			let heading = container.querySelector('h2')
+			let sourceImage = container.querySelector('.source')
+			let playFragment = nodeFromString(playButtonHtml)
+			let playButton = playFragment.children[0]
+			heading.append(playFragment)
+			playButton.addEventListener('click', () => sourceImage.click())
 		}
 
 		function sanitizedCode(code) {
@@ -380,7 +383,6 @@
 		setTimeout(() => {
 			document.querySelector('.source').click()
 		}, 500)
-
 	</script>
 
 </body>
