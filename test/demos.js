@@ -68,6 +68,7 @@ Array.from(document.querySelectorAll('.source'))
 		layout.addEventListener('click', async e => {
 			var transition = new ImageTransition(source, target, {duration})
 			await transition.ready
+			target.style.setProperty('opacity', '') // needed for index.html demo
 			$status.innerHTML = transition.placeholder ? 'using placeholder' : 'unmodified'
 			await transition.play()
 			$status.innerHTML = ''

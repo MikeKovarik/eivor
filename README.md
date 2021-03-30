@@ -1,4 +1,53 @@
-# image-transition
+# eivor
+
+🎞 Library for seamless transitions of images.
+
+## What & How
+
+1. **You give it two images**
+<br>`<img>` tag or element with `background-image`
+<br>Could be different scales, cropped, 
+2. **It calculates how A and B overlap**
+<br>Handles physical image size, crop and different aspect ratio; sizing (`object-fit`, `background-size`: `cover`, `contain` and percentages), positioning `background-position`, `clip-path`, etc...
+4. **Creates intermediary element for animation**
+<br>Or picks the suitable one of the A and B. (Either the higher quality one, or one that contains the other)
+3. **Runs smooth animation**
+<br>Transitioning from the position and location of the first image, to the second one.
+4. **???**
+5. **Profit**
+
+## Usage
+
+### `ImageTransition` class
+
+`source` and `target` can be `<img>` tag or any html element with `background-image` css property. Third and optional argument is an `options` object.
+
+```js
+let transition = new ImageTransition(source, target, {duration: 1000})
+await transition.play()
+```
+
+Optionally you can await `transition.ready` `Promise` if you need to wait for images to load.
+
+```js
+let transition = new ImageTransition(source, target)
+// Wait for source and target images to load. Calculating position delta hasn't yet begun.
+await transition.ready
+// Images are now loaded, here you can do something
+await transition.play()
+// animation is over, temporary files are removed from DOM, source and target have returned to their original positions, any additional CSS props are removed.
+```
+
+### `options` object
+
+* `options.easing`: `string`
+* `options.duration`: `number`
+* `options.fill`: `string`
+* `options.mode`: `'crop'|'recreate'|'clone'` automatically determined. Can be overriden with caution.
+<br>*Eivor figures out which image to animate (depending on crop, size and image quality) wheter a) source to target's position while the target is hidden or b) target from source's position while the source is hidden. If cropping one whithin the other is not possible, then a temporary node with the full image is created for the duration of the transition*
+<br>`crop`: Crop, scale and translation are applied to the larger image. Only available if one image fits into the other.
+<br>`recreate`: The larger image is temporarily resized in order to display the whole image uncropped. Then the target image is animated like `crop`.
+<br>`clone`: Like `recreate`, but animation is applied to a clone of the target image while the original is hidden. 
 
 ## TODOs & Ideas
 

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html dark>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="./test/demos.css">
+	<style>
+
+		* {
+			box-sizing: border-box;
+		}
+		html,
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		body {
+			font-family: 'Segoe UI', 'Roboto', sans-serif;
+			font-size: 16px;
+			padding: 1rem;
+			word-break: break-all;
+			background: rgb(var(--background-rgb));
+			color: rgb(var(--foreground-rgb));
+		}
+
+		:root {
+			--background-rgb: 6, 21, 31;
+			--foreground-rgb: 200, 200, 200;
+			--accent-rgb: 13, 104, 97;
+		}
+
+		a {
+			text-decoration: none;
+			color: rgb(var(--accent-rgb, var(--foreground-rgb)));
+		}
+
+		@media only screen and (max-width: 499px) {
+			body {padding: 1rem}
+		}
+		@media only screen and (min-width: 500px) {
+			body {padding: 5rem}
+		}
+
+		h1,
+		h2,
+		h3 {
+			margin: 0;
+			color: rgb(var(--accent-rgb));
+		}
+		* + h1,
+		* + h2,
+		* + h3 {
+			margin-top: 3rem;
+		}
+		h1 {
+			font-weight: 700;
+			font-size: 30px;
+			letter-spacing: -0.5px;
+			margin-top: 0;
+		}
+		h2 {
+			font-weight: 600;
+			font-size: 20px;
+		}
+		@media only screen and (min-width: 500px) {
+			h1 {
+				border-top: 4px solid rgb(var(--accent-rgb));
+				display: inline-block;
+				padding-right: 60px;
+				padding-top: 16px;
+				padding-bottom: 8px;
+			}
+		}
+		pre,
+		code {
+			font-family: 'Consolas', monospace;
+			font-size: 14px;
+			border-radius: 4px;
+			border: 1px solid rgba(128, 128, 128, 0.1);
+			background-color: rgba(30, 30, 30, 0.4);
+			color: rgba(200, 200, 200, 0.6);
+		}
+		pre {
+			margin: 0.25rem 0;
+			white-space: pre;
+			overflow: auto;
+			font-size: 11px;
+			padding: 8px 10px;
+		}
+		code {
+			font-size: 13px;
+			padding: 1px 4px;
+			white-space: nowrap;
+		}
+		.demo {
+			margin: 24px 0;
+			max-width: 800px;
+		}
+		.subjects {
+			padding: 12px 0;
+			align-items: center;
+			justify-content: space-around;
+		}
+
+		/* overrides for debug style */
+		.source,
+		.target {
+			opacity: 1 !important;
+		}
+		.source::before,
+		.target::before {
+			outline: none !important;
+		}
+		.source::after,
+		.target::after {
+			outline: 2px dashed rgba(128, 128, 128, 0.6) !important;
+		}
+	</style>
+	<title></title>
+</head>
+<body>
+
+	<h1>Eivor</h1>
+
+	<p>🎭 Library for seamless transitions of images.</p>
+
+	<br>
+
+	<p>The gray dashed line around each photo shows its actual size and crop position in regards to <code>background-position</code>, <code>background-size</code>, <code>object-fit</code>, etc...</p>
+	<p>For more debug examples, visit <a href="./test/practical.html">./test/practical.html</a>, <a href="./test/directions.html">./test/directions.html</a> or  <a href="./test/descriptor.html">./test/descriptor.html</a></p>
+
+
+	<div id="demo1" class="demo">
+
+		<style>
+			.source {
+				width: 170px;
+				height: 170px;
+				background-size: cover;
+				background-position: center;
+				background-image: url('./img/olo-park-3-2-medium.jpg');
+			}
+		</style>
+
+		<style>
+			.target {
+				width: 300px;
+				height: 200px;
+				background-size: cover;
+				background-image: url('./img/olo-park-3-2-medium.jpg');
+			}
+		</style>
+
+		<h2>Demo 1</h2>
+		<p>Transitions the same image, displayed differently.</p>
+
+		<div spaced layout>
+			<pre></pre>
+			<pre></pre>
+		</div>
+		<div spaced layout class="subjects">
+			<div class="source"></div>
+			<div class="target"></div>
+		</div>
+
+	</div>
+
+	<div id="demo2" class="demo">
+
+		<style>
+			.source {
+				width: 170px;
+				height: 170px;
+				background-size: cover;
+				background-image: url('./img/olo-park-1-1-left-small.jpg');
+				/* makes the transition run from the left */
+				background-position: left center;
+			}
+		</style>
+
+		<style>
+			.target {
+				width: 300px;
+				height: 200px;
+				background-size: cover;
+				background-image: url('./img/olo-park-3-2-medium.jpg');
+			}
+		</style>
+
+		<h2>Demo 2</h2>
+		<p>1:1 thumbnail (cropped from left side) into original 4:3 image</p>
+
+		<div spaced layout>
+			<pre></pre>
+			<pre></pre>
+		</div>
+		<div spaced layout class="subjects">
+			<div class="source"></div>
+			<div class="target"></div>
+		</div>
+
+	</div>
+
+	<div id="demo3" class="demo">
+
+		<style>
+			.source {
+				width: 170px;
+				height: 170px;
+				background-size: cover;
+				background-position: left 20%;
+				background-image: url('./img/olo-prechod-3-4-medium.jpg');
+				background-color: rgba(128, 128, 128, 0.1);
+			}
+		</style>
+
+		<style>
+			.target {
+				width: 200px;
+				height: 200px;
+				background-size: contain;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-image: url('./img/olo-prechod-3-4-medium.jpg');
+				background-color: rgba(128, 128, 128, 0.1);
+			}
+		</style>
+
+		<h2>Demo 3</h2>
+		<p>Transition the same 3:4 tall image, displayed differently</p>
+
+		<div spaced layout>
+			<pre></pre>
+			<pre></pre>
+		</div>
+		<div spaced layout class="subjects">
+			<div class="source"></div>
+			<div class="target"></div>
+		</div>
+
+	</div>
+
+	<div id="demo4" class="demo">
+
+		<style>
+			.source {
+				width: 160px;
+				height: 160px;
+				background-size: 200%;
+				background-position: left top;
+				background-image: url('./img/bastille-wild-world.jpg');
+			}
+		</style>
+
+		<style>
+			.target {
+				width: 200px;
+				height: 200px;
+				background-size: cover;
+				background-position: center;
+				background-image: url('./img/bastille-wild-world.jpg');
+			}
+		</style>
+
+		<h2>Demo 4</h2>
+		<p>TODO</p>
+
+		<div spaced layout>
+			<pre></pre>
+			<pre></pre>
+		</div>
+		<div spaced layout class="subjects">
+			<div class="source"></div>
+			<div class="target"></div>
+		</div>
+
+	</div>
+<!--
+	<div id="demo3" class="demo">
+
+		<style>
+			.source {
+				width: 200px;
+				height: 200px;
+				background-size: 200%;
+				background-position: left top;
+				background-image: url('./img/bastille-wild-world.jpg');
+			}
+		</style>
+
+		<style>
+			.target {
+				width: 200px;
+				height: 200px;
+				background-size: 200%;
+				background-position: right bottom;
+				background-image: url('./img/bastille-wild-world.jpg');
+			}
+		</style>
+
+		<h2>Demo 3</h2>
+		<p>TODO</p>
+
+		<div spaced layout>
+			<pre></pre>
+			<pre></pre>
+		</div>
+		<div spaced layout class="subjects">
+			<div class="source"></div>
+			<div class="target"></div>
+		</div>
+
+	</div>
+
+	<div id="demo4" class="demo">
+
+		<style>
+			.source {
+				width: 100px;
+				height: 200px;
+				background-size: cover;
+				background-position: center;
+				background-image: url('./img/bastille-wild-world.jpg');
+			}
+		</style>
+
+		<style>
+			.target {
+				width: 200px;
+				height: 100px;
+				background-size: cover;
+				background-position: center;
+				background-image: url('./img/bastille-wild-world.jpg');
+			}
+		</style>
+
+		<h2>Demo 3</h2>
+		<p>TODO</p>
+
+		<div spaced layout>
+			<pre></pre>
+			<pre></pre>
+		</div>
+		<div spaced layout class="subjects">
+			<div class="source"></div>
+			<div class="target"></div>
+		</div>
+
+	</div>
+-->
+	<script type="module" src="./test/demos.js"></script>
+	
+	<script>
+
+		let demoContainers = Array.from(document.querySelectorAll('div.demo'))
+
+		for (let container of demoContainers) {
+			let containerId = '#' + container.id
+			let [sourceStyle, targetStyle] = container.querySelectorAll('style')
+			let sourceRule = sourceStyle.sheet.rules[0]
+			let targetRule = targetStyle.sheet.rules[0]
+			sourceRule.selectorText = containerId + ' ' + sourceRule.selectorText
+			targetRule.selectorText = containerId + ' ' + targetRule.selectorText
+			let [sourcePre, targetPre] = container.querySelectorAll('pre')
+			sourcePre.innerHTML = sanitizedCode(sourceStyle.innerHTML)
+			targetPre.innerHTML = sanitizedCode(targetStyle.innerHTML)
+		}
+
+		function sanitizedCode(code) {
+			let lines = code.split('\n')
+			if (lines[0].trim() === '') lines.splice(0, 1)
+			let firstIndent = lines[0].match(/\s+/)
+			let indentLength = firstIndent[0].length
+			lines = lines.map(line => line.slice(indentLength).replace(/\t/g, '  '))
+			return lines.join('\n')
+		}
+
+		let firstTarget = document.querySelector('.target')
+		firstTarget.style.setProperty('opacity', 0, 'important')
+		setTimeout(() => {
+			document.querySelector('.source').click()
+		}, 500)
+
+	</script>
+
+</body>
+</html>

@@ -184,16 +184,16 @@ export class ImageTransition {
 
 		switch (this.mode) {
 			case 'crop':
-				console.log('RECROP')
+				//console.log('RECROP')
 				this.setupCrop()
 				break
 			case 'recreate':
-				console.log('RECREATE placeholder & out of flow')
+				//console.log('RECREATE placeholder & out of flow')
 				this.createPlaceholder()
 				this.setupOutOfFlow()
 				break
 			case 'clone':
-				console.log('RECREATE WITH CLONE')
+				//console.log('RECREATE WITH CLONE')
 				await this.createClone()
 				this.nodeToAnimate = this.clone
 				this.setupOutOfFlow()
@@ -379,23 +379,20 @@ export class ImageTransition {
 	async play() {
 		await this.ready
 		this.keyframes.zIndex = [1,1]
-		this.createAnimation(true)
+		this.beforeAnimation()
+		let animation = this.animation = this.nodeToAnimate.animate(this.keyframes, this.options)
+		animation.oncancel = this.afterCancel
+		animation.onfinish = () => setTimeout(() => animation.cancel())
+		return this.finished = animation.finished
+	}
+
+	beforeAnimation() {
 		let otherNode = this.nodeToAnimate !== this.source ? this.source : this.target
 		otherNode.style.visibility = 'hidden'
-		//this.source.style.visibility = 'hidden'
-		return this.finished = this.animation.finished
+		this.source.style.visibility = 'hidden'
 	}
 
-	createAnimation(autoCancel = true) {
-		let animation = this.nodeToAnimate.animate(this.keyframes, this.options)
-		animation.oncancel = this.onAnimationCancel
-		if (autoCancel) animation.onfinish = () => setTimeout(() => animation.cancel())
-		this.animation = animation
-		return animation
-	}
-
-	onAnimationCancel = () => {
-		console.log('on cancel')
+	afterCancel = () => {
 		this.source.style.visibility = ''
 		this.target.style.visibility = ''
 		if (this.placeholder) this.placeholder.remove()
