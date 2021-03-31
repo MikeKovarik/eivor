@@ -1,6 +1,10 @@
+<img src="https://raw.githubusercontent.com/MikeKovarik/exifr/exifr/img/app-demo.gif" width="35%" align="right">
+
 # eivor
 
 🎭 Library for seamless transition animations of images.
+
+View [demo page](https://mutiny.cz/eivor/) or [the sample app](https://flexus-next.netlify.app/demos/google-photos/grid-detail.html) from the gif on the right.
 
 ## What & How
 
