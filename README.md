@@ -1,6 +1,6 @@
 # eivor
 
-🎞 Library for seamless transitions of images.
+🎭 Library for seamless transition animations of images.
 
 ## What & How
 
