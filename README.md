@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/MikeKovarik/exifr/exifr/img/app-demo.gif" width="35%" align="right">
+<img src="https://github.com/MikeKovarik/eivor/blob/master/img/app-demo.gif" width="35%" align="right">
 
 # eivor
 
