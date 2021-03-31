@@ -1,5 +1,6 @@
 import './polyfill.js'
-import {ImageDescriptor, promiseUrlLoad, parseBgUrl, promiseLoad, isLoaded} from './ImageDescriptor.js'
+import {ImageDescriptor} from './ImageDescriptor.js'
+
 
 export * from './ImageDescriptor.js'
 

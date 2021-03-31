@@ -16,14 +16,12 @@
     "background",
     "img"
   ],
+  "type": "module",
+  "main": "./src/ImageTransition.js",
   "homepage": "https://mutiny.cz/eivor",
   "bugs": "https://github.com/MikeKovarik/eivor/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/MikeKovarik/eivor.git"
-  },
-  "scripts": {
-  },
-  "devDependencies": {
   }
 }

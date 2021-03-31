@@ -1,6 +1,6 @@
-<img src="https://github.com/MikeKovarik/eivor/blob/master/img/app-demo.gif" width="35%" align="right">
-
 # eivor
+
+<img src="https://github.com/MikeKovarik/eivor/blob/master/img/app-demo.gif" width="35%" align="right">
 
 🎭 Library for seamless transition animations of images.
 
@@ -20,6 +20,18 @@ View [demo page](https://mutiny.cz/eivor/) or [the sample app](https://flexus-ne
 4. **???**
 5. **Profit**
 
+## Installation
+
+```
+npm install eivor
+```
+
+```html
+<script type="importmap">
+{"imports": {"eivor": "./node_modules/eivor/src/ImageTransition.js"}}
+</script>
+```
+
 ## Usage
 
 ### `ImageTransition` class
@@ -27,6 +39,7 @@ View [demo page](https://mutiny.cz/eivor/) or [the sample app](https://flexus-ne
 `source` and `target` can be `<img>` tag or any html element with `background-image` css property. Third and optional argument is an `options` object.
 
 ```js
+import {ImageTransition} from 'eivor'
 let transition = new ImageTransition(source, target, {duration: 1000})
 await transition.play()
 ```
